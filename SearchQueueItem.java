@@ -38,13 +38,7 @@ public class SearchQueueItem implements Comparable<SearchQueueItem> {
 
     // stub needed for file to compile.
     public int compareTo(SearchQueueItem other) {
-        if (this.estTotal < other.estTotal) {
-            return -1;
-        }
-        if (this.estTotal > other.estTotal) {
-            return 1;
-        }
-        return 0;
+        return Double.compare(estTotal, other.estTotal);
     }
 
 
