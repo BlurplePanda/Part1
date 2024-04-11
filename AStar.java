@@ -25,9 +25,41 @@ public class AStar {
      * Finds the shortest path between two stops
      */
     public static List<Edge> findShortestPath(Stop start, Stop goal) {
+        if (start == null || goal == null) {
+            return null;
+        }
 
+        List<Edge> path = new ArrayList<>();
 
-        return null; // to make the template compile!
+        PriorityQueue<SearchQueueItem> fringe = new PriorityQueue<>();
+        Map<Stop, Edge> backpointers = new HashMap<>();
+        Set<Stop> visited = new HashSet<>();
+        fringe.add(new SearchQueueItem(start, null, 0, start.distanceTo(goal)));
+        while (!fringe.isEmpty()) {
+            SearchQueueItem curr = fringe.poll();
+            if (!visited.contains(curr.getStop())) {
+                visited.add(curr.getStop());
+                backpointers.put(curr.getStop(), curr.getEdge());
+                if (curr.getStop() == goal) {
+                    break;
+                }
+                for (Edge edge : curr.getStop().getEdges()) {
+                    Stop neighbour = edge.toStop();
+                    if (!visited.contains(neighbour)) {
+                        double lenToNeigh = curr.getTravelled() + edge.distance();
+                        double estTotal = lenToNeigh + neighbour.distanceTo(goal);
+                        fringe.add(new SearchQueueItem(neighbour, edge, lenToNeigh, estTotal));
+                    }
+                }
+            }
+        }
+
+        Stop curr = goal;
+        while (curr != start) {
+            path.add(0, backpointers.get(curr));
+            curr = backpointers.get(curr).fromStop();
+        }
+        return path; // to make the template compile!
     }
 
 }
