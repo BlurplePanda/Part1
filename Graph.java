@@ -97,7 +97,16 @@ public class Graph {
      * Assumes that all the previous walking edges have been removed
      */
     public void recomputeWalkingEdges(double walkingDistance) {
-
+        for (Stop stop1 : stops) {
+            for (Stop stop2 : stops) {
+                double dist = stop1.distanceTo(stop2);
+                if (dist <= walkingDistance) {
+                    Edge edge = new Edge(stop1, stop2, Transport.WALKING, null, dist);
+                    stop1.addEdge(edge);
+                    edges.add(edge);
+                }
+            }
+        }
 
     }
 
@@ -107,8 +116,10 @@ public class Graph {
      * - from the forward neighbours of each Stop.
      */
     public void removeWalkingEdges() {
-
-
+        edges.removeIf((Edge e)->e.transpType() == Transport.WALKING);
+        for (Stop stop : stops) {
+            stop.deleteEdgesOfType(Transport.WALKING);
+        }
     }
 
     //=============================================================================
