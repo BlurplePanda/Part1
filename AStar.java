@@ -41,6 +41,11 @@ public class AStar {
                 visited.add(curr.getStop());
                 backpointers.put(curr.getStop(), curr.getEdge());
                 if (curr.getStop() == goal) {
+                    Stop here = goal;
+                    while (here != start) {
+                        path.add(0, backpointers.get(here));
+                        here = backpointers.get(here).fromStop();
+                    }
                     break;
                 }
                 for (Edge edge : curr.getStop().getEdges()) {
@@ -54,12 +59,7 @@ public class AStar {
             }
         }
 
-        Stop curr = goal;
-        while (curr != start) {
-            path.add(0, backpointers.get(curr));
-            curr = backpointers.get(curr).fromStop();
-        }
-        return path; // to make the template compile!
+        return path;
     }
 
 }
